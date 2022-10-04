@@ -1,55 +1,51 @@
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
 
-#include "DIO_interface.h"
+#include "DIO.h"
 #include "STK_interface.h"
-//#include "EXTI_interface.h"
 
 #include "DAC_interface.h"
 #include "DAC_private.h"
 #include "DAC_config.h"
 
-static volatile u16 freq = 0;
 
-void DAC_voidReadAudioArr(u8* copy_u8AudioData, u8 copy_u8Size)// can be optimized
+static volatile u8 time = 125;// 1/freq
+
+void DAC_voidReadAudioArrSync(const u8 *audio_array, u16 ArraySize)
 {
-	u8 Local_u8Bit = 0;
-	for(u16 i=0 ; i<copy_u8Size ; i++)
+	for(u16 i=0 ; i<ArraySize ; i++)
 	{
-		/* DAC0*/
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],0);
-		MGPIO_voidSetPinValue(GPIOA,PIN8,Local_u8Bit);
-		/* DAC1 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],1);
-		MGPIO_voidSetPinValue(GPIOA,PIN9,Local_u8Bit);
-		/* DAC2 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],2);
-		MGPIO_voidSetPinValue(GPIOA,PIN10,Local_u8Bit);
-		/* DAC3 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],3);
-		MGPIO_voidSetPinValue(GPIOA,PIN11,Local_u8Bit);
-		/* DAC4 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],4);
-		MGPIO_voidSetPinValue(GPIOA,PIN12,Local_u8Bit);
-		/* DAC5 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],5);
-		MGPIO_voidSetPinValue(GPIOA,PIN15,Local_u8Bit);
-		/* DAC6 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],6);
-		MGPIO_voidSetPinValue(GPIOB,PIN11,Local_u8Bit);
-		/* DAC7 */
-		Local_u8Bit = GET_BIT(copy_u8AudioData[i],7);
-		MGPIO_voidSetPinValue(GPIOB,PIN12,Local_u8Bit);
-		STK_voidSetBusyWait( (1/freq) );
+		DIO_ChannelGroupWrite(DAC_DIO_CHANNELGROUP,audio_array[i]);
+		DAC_delay();
 	}
 }
 
+
+void DAC_voidReadAudioArrAsync(u8 *audio_array, u16 ArraySize)
+{
+	static volatile u16 counter = 0;
+	DIO_ChannelGroupWrite(DAC_DIO_CHANNELGROUP,audio_array[counter]);
+	counter = (counter + 1) % ArraySize;
+}
+
+
+
 void  DAC_voidIncreaseFreq(void)
 {
-	freq +=  ;
+	if(time > 15)
+	   time -= 10  ;
 }
 
 void  DAC_voidDecreaseFreq(void)
 {
-	freq -=  ;
+	if(time < 230)
+	   time += 10  ;
+}
+
+void DAC_delay(void)
+{
+	for(u8 i=0 ; i<time ;i++)
+	{
+		asm("NOP");
+	}
 }

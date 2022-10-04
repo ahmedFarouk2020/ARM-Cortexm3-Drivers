@@ -6,15 +6,14 @@
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
 
-#include "RCC_interface.h"
 #include "RCC_private.h"
+#include "RCC_interface.h"
 #include "RCC_config.h"
 
 void RCC_voidInitSysClock()
 {
     #if   RCC_CLOCK_TYPE == RCC_HSE_CRYSTAL
-        RCC_CR  = 0x00010000;        /* ENABLE HSE WITH NO BYPASS */
-        RCC_CFGR= 0x00000001;
+        RCC_CR = 0x00010000 ;        /* ENABLE HSE WITH NO BYPASS */
     #elif RCC_CLOCK_TYPE == RCC_HSE_RC
         RCC_CR = 0x00050000;         /* ENABLE HSE WITH BYPASS */
     #elif RCC_CLOCK_TYPE == RCC_HSI

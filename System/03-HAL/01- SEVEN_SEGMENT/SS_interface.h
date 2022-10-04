@@ -9,6 +9,7 @@
 #define COMMON_CATHODE       1
 
 /* NUMBERS          gfedcba  FOR COMMON_CATHODE */
+#define ZERO	  0b0111111
 #define ONE       0b0000110
 #define TWO       0b1011011
 #define THREE     0b1001111

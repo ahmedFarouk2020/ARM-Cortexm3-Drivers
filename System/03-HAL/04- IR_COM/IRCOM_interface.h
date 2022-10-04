@@ -12,14 +12,13 @@ void IRCOM_voidReadFrameSegTime(void); //done
 //u8 IRCOM_voidGetData(u16* copy_DataArr);
 void IRCOM_voidGetData(void); // done
 /* check if frame is sent correctly or not */
-/* اعمل جمع بين البتات بتاعت العنوان والبتات بتاعت البيانات */
+/*  */
 void IRCOM_voidCheckFrame(u16* copy_DataArr);
 /* do function according to data received 
  * total data will be stored 
  * do specific function at last
  */
-void IRCOM_voidDoFunction(void);// done
-
+void IRCOM_voidDoFunction(void);
 
 
 
